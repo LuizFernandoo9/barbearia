@@ -31,35 +31,35 @@ public class ServicesService {
         var newService = ServicesModel.builder()
         .name(servicesDto.getName())
         .description(servicesDto.getDescription())
-        .duration(servicesDto.getDuration()).build();
+        .duration(servicesDto.getDuration())
+        .category(servicesDto.getCategory()).build();
 
         this.servicesRepository.save(newService);
 
         return ServicesDto.builder()
         .name(servicesDto.getName())
         .description(servicesDto.getDescription())
-        .duration(servicesDto.getDuration()).build();
+        .duration(servicesDto.getDuration())
+        .category(servicesDto.getCategory()).build();
     }
 
     public List<ServicesDto> findServices(ServicesDto servicesDto){
 
-        if (servicesDto.getName().isEmpty()) {
-            return this.servicesRepository.findAll().stream().map(services -> ServicesDto.builder()
+        if (servicesDto.getCategory().isEmpty()) {
+            return this.servicesRepository.findAll().stream().map(services -> 
+            ServicesDto.builder()
             .name(services.getName())
             .description(services.getDescription())
             .duration(services.getDuration()).build()).collect(Collectors.toList());
             
         }else{
-            var services = this.servicesRepository.findByName(servicesDto.getName()).orElseThrow(()-> {
-                throw new ServicesNotFoundException();
-            });
-
-            return List.of(ServicesDto.builder()
-            .name(services.getName())
-            .description(services.getDescription())
-            .duration(services.getDuration()).build());
+            return this.servicesRepository.findAllByCategory(servicesDto.getCategory()).stream().map(servicesCategory -> ServicesDto.builder()
+            .name(servicesCategory.getName())
+            .description(servicesCategory.getDescription())
+            .category(servicesCategory.getCategory())
+            .duration(servicesCategory.getDuration()).build()).collect(Collectors.toList());
         }
-    }
+    } 
 
     public ServicesDto editServices(ServicesDto servicesDto, UUID id){
         var service = this.servicesRepository.findById(id).orElseThrow(()->{
