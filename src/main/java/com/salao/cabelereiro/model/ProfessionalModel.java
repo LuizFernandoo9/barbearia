@@ -3,7 +3,11 @@ package com.salao.cabelereiro.model;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import com.salao.cabelereiro.enums.Shift;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,5 +34,6 @@ public class ProfessionalModel {
     @JoinColumn(name = "idServices", nullable = false)
     private ServicesModel specialization;
 
-    private LocalDateTime availability;
+    @Enumerated(EnumType.STRING)
+    private Shift shift;
 }

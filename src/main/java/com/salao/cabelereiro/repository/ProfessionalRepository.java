@@ -12,5 +12,5 @@ public interface ProfessionalRepository extends JpaRepository<ProfessionalModel,
 
     Optional<ProfessionalModel> findByName(String name);
 
-    Optional<ProfessionalModel> findByAvailability(LocalDateTime availability);
+
 } 
