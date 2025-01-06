@@ -1,7 +1,6 @@
 package com.salao.cabelereiro.service;
 
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -81,5 +80,13 @@ public class ProfessionalService {
         .specialization(professional.getSpecialization().getName())
         .shift(professional.getShift())
         .build();
+    }
+
+    public void removeProfessional(UUID id){
+        var professional = this.professionalRepository.findById(id).orElseThrow(()->{
+            throw new ProfessionalNotFoundException();
+        });
+
+        this.professionalRepository.delete(professional);
     }
 }
