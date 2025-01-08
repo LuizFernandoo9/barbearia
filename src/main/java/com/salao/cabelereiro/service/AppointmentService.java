@@ -8,10 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salao.cabelereiro.dtos.AppointmentDTO;
+import com.salao.cabelereiro.dtos.ProfessionalDTO;
+import com.salao.cabelereiro.dtos.ServicesDto;
 import com.salao.cabelereiro.exception.AppointmentNotAvailable;
 import com.salao.cabelereiro.exception.ProfessionalNotFoundException;
 import com.salao.cabelereiro.exception.ServicesNotFoundException;
 import com.salao.cabelereiro.model.AppointmentModel;
+import com.salao.cabelereiro.model.ProfessionalModel;
+import com.salao.cabelereiro.model.ServicesModel;
 import com.salao.cabelereiro.repository.AppointmentRepository;
 import com.salao.cabelereiro.repository.ProfessionalRepository;
 import com.salao.cabelereiro.repository.ServicesRepository;
@@ -28,26 +32,34 @@ public class AppointmentService {
     @Autowired
     private ServicesRepository servicesRepository;
 
-    public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO){
-        var professional = this.professionalRepository.findByName(appointmentDTO.getProfessionalName()).orElseThrow(()->{
+    public ProfessionalModel getProfessionalsByName(String name){
+        return  this.professionalRepository.findByName(name).orElseThrow(()->{
             throw new ProfessionalNotFoundException();
         });
+    }
 
-        var services = this.servicesRepository.findByName(appointmentDTO.getServiceName()).orElseThrow(()->{
+    public ServicesModel getServicesByName(String name){
+        return this.servicesRepository.findByName(name).orElseThrow(()->{
             throw new ServicesNotFoundException();
         });
+    }
 
-        this.appointmentRepository.findByNewAppointment(appointmentDTO.getNewAppointment()).ifPresent(appointment -> {
+    public void validateAppointmentAvailability(LocalDateTime dateTimeAppointment){
+        this.appointmentRepository.findByNewAppointment(dateTimeAppointment).ifPresent(newAppointment -> {
             throw new AppointmentNotAvailable();
         });
-        
-        var timeLimit = LocalTime.of(17, 0);
 
-        var dateTimeAppointment = appointmentDTO.getNewAppointment();
-
-        if (dateTimeAppointment.toLocalTime().isAfter(timeLimit)) {
+        if(dateTimeAppointment.toLocalTime().isAfter(LocalTime.of(17, 0))){
             throw new AppointmentNotAvailable();
         }
+    }
+
+    public AppointmentDTO createAppointment(AppointmentDTO appointmentDTO){
+       var professional = getProfessionalsByName(appointmentDTO.getProfessionalName());
+
+       var services = getServicesByName(appointmentDTO.getServiceName());
+
+       validateAppointmentAvailability(appointmentDTO.getNewAppointment());
 
         var newAppointment = AppointmentModel.builder()
         .professionalName(professional)

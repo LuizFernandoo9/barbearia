@@ -30,7 +30,7 @@ public class AppointmentModel {
     @JoinColumn(name = "idProfessional", nullable = false)
     private ProfessionalModel professionalName;
 
-    @ManyToMany
+    @ManyToOne
     @JoinColumn(name = "idService", nullable = false)
     private ServicesModel serviceName;
 
