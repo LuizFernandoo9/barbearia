@@ -1,15 +1,14 @@
 package com.salao.cabelereiro.service;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.salao.cabelereiro.dtos.AppointmentDTO;
-import com.salao.cabelereiro.dtos.ProfessionalDTO;
-import com.salao.cabelereiro.dtos.ServicesDto;
 import com.salao.cabelereiro.exception.AppointmentNotAvailable;
 import com.salao.cabelereiro.exception.ProfessionalNotFoundException;
 import com.salao.cabelereiro.exception.ServicesNotFoundException;
@@ -72,7 +71,6 @@ public class AppointmentService {
         .professionalName(professional.getName())
         .serviceName(services.getName())
         .newAppointment(appointmentDTO.getNewAppointment()).build();
-
     }
 
     public AppointmentDTO findAppointment(AppointmentDTO appointmentDTO){
@@ -85,5 +83,12 @@ public class AppointmentService {
         .serviceName(appointment.getService().getName())
         .newAppointment(appointment.getNewAppointment()).build();
     }
-    
+
+    public List<AppointmentDTO> findAllAppointment(){
+        return this.appointmentRepository.findAll().stream().map(appointment -> AppointmentDTO.builder()
+        .professionalName(appointment.getProfessional().getName())
+        .serviceName(appointment.getService().getName())
+        .newAppointment(appointment.getNewAppointment())
+        .build()).collect(Collectors.toList());
+    }
 }

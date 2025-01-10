@@ -31,9 +31,20 @@ public class AppointmentController {
     }
 
     @GetMapping("/")
-    public ResponseEntity<Object> getAppoinment(@RequestBody AppointmentDTO appointmentDTO){
+    public ResponseEntity<Object> getAppointment(@RequestBody AppointmentDTO appointmentDTO){
         try {
             var bodyAppointment = this.appointmentService.findAppointment(appointmentDTO);
+            return ResponseEntity.ok().body(bodyAppointment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/appointments")
+    public ResponseEntity<Object> getAllAppointment(){
+        try {
+            var bodyAppointment = this.appointmentService.findAllAppointment();
             return ResponseEntity.ok().body(bodyAppointment);
         } catch (Exception e) {
             e.printStackTrace();

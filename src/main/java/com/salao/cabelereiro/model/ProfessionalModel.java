@@ -1,6 +1,5 @@
 package com.salao.cabelereiro.model;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 import com.salao.cabelereiro.enums.Shift;
