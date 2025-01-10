@@ -62,8 +62,8 @@ public class AppointmentService {
        validateAppointmentAvailability(appointmentDTO.getNewAppointment());
 
         var newAppointment = AppointmentModel.builder()
-        .professionalName(professional)
-        .serviceName(services)
+        .professional(professional)
+        .service(services)
         .newAppointment(appointmentDTO.getNewAppointment()).build();
 
         this.appointmentRepository.save(newAppointment);
@@ -74,4 +74,16 @@ public class AppointmentService {
         .newAppointment(appointmentDTO.getNewAppointment()).build();
 
     }
+
+    public AppointmentDTO findAppointment(AppointmentDTO appointmentDTO){
+        var appointment = this.appointmentRepository.findByNewAppointment(appointmentDTO.getNewAppointment()).orElseThrow(()->{
+            throw new AppointmentNotAvailable();
+        });
+
+        return AppointmentDTO.builder()
+        .professionalName(appointment.getProfessional().getName())
+        .serviceName(appointment.getService().getName())
+        .newAppointment(appointment.getNewAppointment()).build();
+    }
+    
 }

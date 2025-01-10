@@ -28,11 +28,11 @@ public class AppointmentModel {
     
     @ManyToOne
     @JoinColumn(name = "idProfessional", nullable = false)
-    private ProfessionalModel professionalName;
+    private ProfessionalModel professional;
 
     @ManyToOne
     @JoinColumn(name = "idService", nullable = false)
-    private ServicesModel serviceName;
+    private ServicesModel service;
 
     private LocalDateTime newAppointment;
 }
