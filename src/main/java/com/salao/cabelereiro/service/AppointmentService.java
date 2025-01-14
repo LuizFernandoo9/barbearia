@@ -107,4 +107,12 @@ public class AppointmentService {
         .newAppointment(appointment.getNewAppointment())
         .build();
     }
+
+    public void deleteAppointment(UUID id){
+        var appointment = this.appointmentRepository.findById(id).orElseThrow(()->{
+            throw new AppointmentNotAvailable();
+        });
+
+        this.appointmentRepository.delete(appointment);
+    }
 }
