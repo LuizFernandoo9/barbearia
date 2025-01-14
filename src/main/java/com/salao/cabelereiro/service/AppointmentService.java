@@ -3,6 +3,7 @@ package com.salao.cabelereiro.service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,5 +91,20 @@ public class AppointmentService {
         .serviceName(appointment.getService().getName())
         .newAppointment(appointment.getNewAppointment())
         .build()).collect(Collectors.toList());
+    }
+
+    public AppointmentDTO updateAppointment(AppointmentDTO appointmentDTO, UUID id){
+        var appointment = this.appointmentRepository.findById(id).orElseThrow(()->{
+            throw new AppointmentNotAvailable();
+        });
+        
+        appointment.setNewAppointment(appointmentDTO.getNewAppointment());
+        appointmentRepository.save(appointment);
+
+        return AppointmentDTO.builder()
+        .professionalName(appointment.getProfessional().getName())
+        .serviceName(appointment.getService().getName())
+        .newAppointment(appointment.getNewAppointment())
+        .build();
     }
 }
